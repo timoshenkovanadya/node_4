@@ -1,0 +1,8 @@
+{
+    "dbName": "postgres",
+    "dbPort": 5432,
+    "dbUser": "postgres",
+    "dbPassword": "123",
+    "dbHost": "localhost",
+    "dbDialect": "postgres"
+}
