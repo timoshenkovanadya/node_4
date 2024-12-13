@@ -12,7 +12,7 @@ app.use(express.json());
 const pizzaRouter = require('./routes/pizzaRouter');
 app.use('/pizzas', pizzaRouter);
 
-db.sequelize.sync({force: true})
+db.sequelize.sync()
 .then(() => {
     console.log('connected to db');
 
