@@ -2,7 +2,7 @@ const express = require("express");
 const Sequelize = require("sequelize");
 const config = require("../config.json");
 const db = require("../models")(Sequelize, config);
-const pizzaRouter = express.Router();
+const turtleRouter = express.Router();
 const { checkIsString, checkIsNumber } = require("../utils");
 
 
@@ -34,6 +34,7 @@ pizzaRouter.get("/", async (req, res) => {
 //readOne
 pizzaRouter.get("/:id", async ({ params }, res) => {
   try {
+    console.log("id", params.id);
     const pizza = await db.pizzas.findOne({
       where: {
         id: params.id,

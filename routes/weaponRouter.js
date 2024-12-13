@@ -2,16 +2,16 @@ const express = require("express");
 const Sequelize = require("sequelize");
 const config = require("../config.json");
 const db = require("../models")(Sequelize, config);
-const pizzaRouter = express.Router();
+const weaponRouter = express.Router();
 const { checkIsString, checkIsNumber } = require("../utils");
 
 
 //create
-pizzaRouter.post("/", async ({ body }, res) => {
+weaponRouter.post("/", async ({ body }, res) => {
   try {
     if (checkValidation(body)) {
-      const newPizza = await db.pizzas.create(body);
-      res.json(newPizza);
+      const newWeapon = await db.weapons.create(body);
+      res.json(newWeapon);
     } else {
       res.status(400).send("invalid data input");
     }
@@ -22,83 +22,82 @@ pizzaRouter.post("/", async ({ body }, res) => {
 
 
 //readAll
-pizzaRouter.get("/", async (req, res) => {
+weaponRouter.get("/", async (req, res) => {
   try {
-    const pizzas = await db.pizzas.findAndCountAll();
-    res.json(pizzas);
+    const weapons = await db.weapons.findAndCountAll();
+    res.json(weapons);
   } catch (err) {
     res.status(500).send(err);
   }
 });
 
 //readOne
-pizzaRouter.get("/:id", async ({ params }, res) => {
+weaponRouter.get("/:id", async ({ params }, res) => {
   try {
-    const pizza = await db.pizzas.findOne({
+    const weapon = await db.weapons.findOne({
       where: {
         id: params.id,
       },
     });
-    if (!pizza) {
-      return res.status(404).send("There is no pizza with such id");
+    if (!weapon) {
+      return res.status(404).send("There is no weapon with such id");
     }
-    res.json(pizza);
+    res.json(weapon);
   } catch (err) {
     res.status(500).send(err);
   }
 });
 
 //update
-pizzaRouter.put("/:id", async ({ body, params }, res) => {
+weaponRouter.put("/:id", async ({ body, params }, res) => {
   try {
     if (
       (body.name && !checkIsString(body.name)) ||
-      (body.description && !checkIsString(body.description)) ||
-      (body.calories && !checkIsNumber(body.calories))
+      (body.dps && !checkIsNumber(body.dps)) 
     ) {
       return res.status(400).send("invalid data input");
     }
-    const pizza = await db.pizzas.findOne({
+    const weapon = await db.weapons.findOne({
       where: {
         id: params.id,
       },
     });
-    if (!pizza) {
-      return res.status(404).send("there is no pizza with such id");
+    if (!weapon) {
+      return res.status(404).send("there is no weapon with such id");
     }
-    await db.pizzas.update(body, {
+    await db.weapons.update(body, {
       where: {
         id: params.id,
       },
     });
-    const updatedPizza = await db.pizzas.findOne({
+    const updatedWeapon = await db.weapons.findOne({
       where: {
         id: params.id,
       },
     });
-    res.json(updatedPizza);
+    res.json(updatedWeapon);
   } catch (err) {
     res.status(500).send(err);
   }
 });
 
 //delete
-pizzaRouter.delete("/:id", async ({ params }, res) => {
+weaponRouter.delete("/:id", async ({ params }, res) => {
   try {
-    const pizza = await db.pizzas.findOne({
+    const weapon = await db.weapons.findOne({
       where: {
         id: params.id,
       },
     });
-    if (!pizza) {
-      return res.status(404).send("there is no pizza with such id");
+    if (!weapon) {
+      return res.status(404).send("there is no weapon with such id");
     }
-    await db.pizzas.destroy({
+    await db.weapons.destroy({
       where: {
         id: params.id,
       },
     });
-    res.json(pizza);
+    res.json(weapon);
   } catch (err) {
     res.status(500).send(err);
   }
@@ -107,8 +106,7 @@ pizzaRouter.delete("/:id", async ({ params }, res) => {
 function checkValidation(body) {
   return (
     checkIsString(body.name) &&
-    checkIsNumber(body.calories) &&
-    checkIsString(body.description)
+    checkIsNumber(body.dps) 
   );
 }
-module.exports = pizzaRouter;
+module.exports = weaponRouter;

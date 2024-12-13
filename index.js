@@ -1,16 +1,16 @@
 const Sequelize = require('sequelize');
-
 const config = require('./config.json');
-
 const db = require('./models')(Sequelize, config);
-
 const express = require('express');
-
+const pizzaRouter = require('./routes/pizzaRouter');
+const weaponRouter = require('./routes/weaponRouter')
 
 const app = express();
 app.use(express.json());
-const pizzaRouter = require('./routes/pizzaRouter');
+
 app.use('/pizzas', pizzaRouter);
+app.use('/weapon', weaponRouter);
+
 
 db.sequelize.sync()
 .then(() => {
