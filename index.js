@@ -87,8 +87,32 @@ app.get("/favoritePizzas", async (req, res) => {
   }
 });
 
+//update pizzas, gt 3000 calories
+app.get("/superFat", async (req, res) => {
+  try {
+    await db.pizzas.update(
+      { description: Sequelize.literal("description || ' SUPER FAT!'") },
+      {
+        where: {
+          calories: { [Op.gt]: 3000 },
+        },
+      }
+    );
+
+    const updatedPizzas = await db.pizzas.findAll({
+      where: {
+        calories: { [Op.gt]: 3000 },
+      },
+    });
+
+    res.status(200).send(updatedPizzas);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
 db.sequelize
-  .sync({ alter: true })
+  .sync()
   .then(() => {
     console.log("connected to db");
 
