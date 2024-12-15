@@ -1,4 +1,4 @@
-const Sequelize = require("sequelize");
+const { Sequelize, DataTypes, Op } = require("sequelize");
 const config = require("./config.json");
 const db = require("./models")(Sequelize, config);
 const express = require("express");
@@ -13,6 +13,7 @@ app.use("/pizzas", pizzaRouter);
 app.use("/weapon", weaponRouter);
 app.use("/turtle", turtleRouter);
 
+//find all turtles, whose favorite pizza is mozzarela
 app.get("/favoritePizza", async (req, res) => {
   try {
     const turtles1 = await db.turtles.findAll({
@@ -22,20 +23,62 @@ app.get("/favoritePizza", async (req, res) => {
           as: "firstFavoritePizza",
           where: { name: "mozzarela" },
         },
-             ],
+      ],
     });
     const turtles2 = await db.turtles.findAll({
-        include: [
-          {
-            model: db.pizzas,
-            as: "secondFavoritePizza",
-            where: { name: "mozzarela" },
-          },
-               ],
-      });
-   const turtles = [...turtles1, ...turtles2]
+      include: [
+        {
+          model: db.pizzas,
+          as: "secondFavoritePizza",
+          where: { name: "mozzarela" },
+        },
+      ],
+    });
+    const turtles = [...turtles1, ...turtles2];
     console.log(turtles);
     res.status(200).send(turtles);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+//find all pizzas marked as favorite
+app.get("/favoritePizzas", async (req, res) => {
+  try {
+    const firstFavoritePizzas = await db.pizzas.findAll({
+      include: [
+        {
+          model: db.turtles,
+          as: "firstFavoritePizza",
+          attributes: [],
+          where: { firstFavoritePizzaId: { [Op.col]: "pizzas.id" } },
+        },
+      ],
+      attributes: ["id", "name", "description", "calories"],
+      distinct: true,
+    });
+    const secondFavoritePizzas = await db.pizzas.findAll({
+      include: [
+        {
+          model: db.turtles,
+          as: "secondFavoritePizza",
+          attributes: [],
+          where: { secondFavoritePizzaId: { [Op.col]: "pizzas.id" } },
+        },
+      ],
+      attributes: ["id", "name", "description", "calories"],
+      distinct: true,
+    });
+    const favoritePizzas = [
+      ...firstFavoritePizzas,
+      ...secondFavoritePizzas,
+    ].reduce((acc, pizza) => {
+      if (!acc.some((item) => item.id === pizza.id)) {
+        acc.push(pizza);
+      }
+      return acc;
+    }, []);
+    res.status(200).send(favoritePizzas);
   } catch (err) {
     res.status(500).send(err);
   }
