@@ -8,15 +8,10 @@ const { checkIsString, checkIsNumber } = require("../utils");
 //create
 turtleRouter.post("/", async ({ body }, res) => {
   try {
-    console.log(body);
-    console.log(checkValidation(body));
-   if (checkValidation(body)) {
       const newTurtle = await db.turtles.create(body);
       res.json(newTurtle);
-    } else {
-      res.status(400).send("invalid data input");
-    }
-  } catch (err) {
+    } 
+ catch (err) {
     res.status(500).send(err);
   }
 });

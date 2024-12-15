@@ -16,25 +16,28 @@ app.use("/turtle", turtleRouter);
 //find all turtles, whose favorite pizza is mozzarela
 app.get("/favoritePizza", async (req, res) => {
   try {
-    const turtles1 = await db.turtles.findAll({
+    const turtles = await db.turtles.findAll({
       include: [
         {
           model: db.pizzas,
           as: "firstFavoritePizza",
           where: { name: "mozzarela" },
+          required: false,
         },
-      ],
-    });
-    const turtles2 = await db.turtles.findAll({
-      include: [
         {
           model: db.pizzas,
           as: "secondFavoritePizza",
           where: { name: "mozzarela" },
+          required: false,
         },
       ],
+      where: {
+        [Op.or]: [
+          { "$firstFavoritePizza.name$": "mozzarela" },
+          { "$secondFavoritePizza.name$": "mozzarela" },
+        ],
+      },
     });
-    const turtles = [...turtles1, ...turtles2];
     console.log(turtles);
     res.status(200).send(turtles);
   } catch (err) {
