@@ -5,13 +5,14 @@ const db = require("../models")(Sequelize, config);
 const turtleRouter = express.Router();
 const { checkIsString, checkIsNumber } = require("../utils");
 
-
 //create
-pizzaRouter.post("/", async ({ body }, res) => {
+turtleRouter.post("/", async ({ body }, res) => {
   try {
-    if (checkValidation(body)) {
-      const newPizza = await db.pizzas.create(body);
-      res.json(newPizza);
+    console.log(body);
+    console.log(checkValidation(body));
+   if (checkValidation(body)) {
+      const newTurtle = await db.turtles.create(body);
+      res.json(newTurtle);
     } else {
       res.status(400).send("invalid data input");
     }
@@ -20,86 +21,87 @@ pizzaRouter.post("/", async ({ body }, res) => {
   }
 });
 
-
 //readAll
-pizzaRouter.get("/", async (req, res) => {
+turtleRouter.get("/", async (req, res) => {
   try {
-    const pizzas = await db.pizzas.findAndCountAll();
-    res.json(pizzas);
+    const turtles = await db.turtles.findAndCountAll();
+    res.json(turtles);
   } catch (err) {
     res.status(500).send(err);
   }
 });
 
 //readOne
-pizzaRouter.get("/:id", async ({ params }, res) => {
+turtleRouter.get("/:id", async ({ params }, res) => {
   try {
     console.log("id", params.id);
-    const pizza = await db.pizzas.findOne({
+    const turtle = await db.turtles.findOne({
       where: {
         id: params.id,
       },
     });
-    if (!pizza) {
-      return res.status(404).send("There is no pizza with such id");
+    if (!turtle) {
+      return res.status(404).send("There is no turtle with such id");
     }
-    res.json(pizza);
+    res.json(turtle);
   } catch (err) {
     res.status(500).send(err);
   }
 });
 
 //update
-pizzaRouter.put("/:id", async ({ body, params }, res) => {
+turtleRouter.put("/:id", async ({ body, params }, res) => {
   try {
     if (
       (body.name && !checkIsString(body.name)) ||
-      (body.description && !checkIsString(body.description)) ||
-      (body.calories && !checkIsNumber(body.calories))
+      (body.color && !checkIsString(body.color)) ||
+      (body.weaponId && !checkIsNumber(body.weaponId)) ||
+      (body.firstFavoritePizzaId && !checkIsNumber(body.firstFavoritePizzaId)) ||
+      (body.secondFavoritePizzaId && !checkIsNumber(body.secondFavoritePizzaId))
     ) {
       return res.status(400).send("invalid data input");
     }
-    const pizza = await db.pizzas.findOne({
+    const turtle = await db.turtles.findOne({
       where: {
         id: params.id,
       },
     });
-    if (!pizza) {
-      return res.status(404).send("there is no pizza with such id");
+    if (!turtle) {
+      return res.status(404).send("there is no turtle with such id");
     }
-    await db.pizzas.update(body, {
+    await db.turtles.update(body, {
       where: {
         id: params.id,
       },
     });
-    const updatedPizza = await db.pizzas.findOne({
+    const updatedTurtle = await db.turtles.findOne({
       where: {
         id: params.id,
       },
     });
-    res.json(updatedPizza);
+    res.json(updatedTurtle);
   } catch (err) {
     res.status(500).send(err);
   }
 });
 
 //delete
-pizzaRouter.delete("/:id", async ({ params }, res) => {
+turtleRouter.delete("/:id", async ({ params }, res) => {
   try {
-    const pizza = await db.pizzas.findOne({
+    const turtle = await db.turtles.findOne({
       where: {
         id: params.id,
       },
     });
-    if (!pizza) {
-      return res.status(404).send("there is no pizza with such id");
+    if (!turtle) {
+      return res.status(404).send("there is no turtle with such id");
     }
-    await db.pizzas.destroy({
+    await db.turtles.destroy({
       where: {
         id: params.id,
       },
     });
-    res.json(pizza);
+    res.json(turtle);
   } catch (err) {
     res.status(500).send(err);
   }
@@ -108,8 +110,10 @@ pizzaRouter.delete("/:id", async ({ params }, res) => {
 function checkValidation(body) {
   return (
     checkIsString(body.name) &&
-    checkIsNumber(body.calories) &&
-    checkIsString(body.description)
+    checkIsString(body.color) &&
+    checkIsNumber(body.weaponId) &&
+    checkIsNumber(body.firstFavoritePizzaId) &&
+    checkIsNumber(body.secondFavoritePizzaId)
   );
 }
-module.exports = pizzaRouter;
+module.exports = turtleRouter;

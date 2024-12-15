@@ -1,0 +1,78 @@
+[
+  {
+    "name": "mozzarela",
+    "description": "Tasty pizza with mozzarela",
+    "calories": 2500
+  },
+
+  {
+    "name": "peperoni",
+    "description": "tasty pizza with peperoni",
+    "calories": 3500
+  },
+  {
+    "name": "caprizziosa",
+    "description": "tasty pizza with proshutto",
+    "calories": 3100
+  },
+  {
+    "name": "margarita",
+    "description": "tasty pizza with cheese",
+    "calories": 2000
+  },
+  {
+    "name": "tuna",
+    "description": "tasty pizza with tuna fish",
+    "calories": 1500
+  }
+]
+
+[
+    {
+        "name": "Katana swords",
+        "dps": 67
+    },
+    {    
+    "name": "Bo staff",
+    "dps": 110
+},
+{    
+    "name": "Sai",
+    "dps": 90
+},
+{    
+    "name": "Nunchaku",
+    "dps": 80
+}
+
+]
+[
+    {
+        "name": "Donatello",
+        "color": "purple",
+        "weaponId": 2,
+        "firstFavoritePizzaId": 1,
+        "secondFavoritePizzaId": 2
+        },
+        {
+            "name": "Leonardo",
+            "color": "blue",
+            "weaponId": 1,
+            "firstFavoritePizzaId": 2,
+            "secondFavoritePizzaId": 3
+            },
+            {
+                "name": "Raphael",
+                "color": "green",
+                "weaponId": 3,
+                "firstFavoritePizzaId": 3,
+                "secondFavoritePizzaId": 4
+                },
+                {
+                    "name": "Michelangelo",
+                    "color": "orange",
+                    "weaponId": 4,
+                    "firstFavoritePizzaId": 4,
+                    "secondFavoritePizzaId": 5
+                    }
+]
