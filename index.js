@@ -98,7 +98,6 @@ app.get("/superFat", async (req, res) => {
         },
       }
     );
-
     const updatedPizzas = await db.pizzas.findAll({
       where: {
         calories: { [Op.gt]: 3000 },
@@ -110,6 +109,22 @@ app.get("/superFat", async (req, res) => {
     res.status(500).send(err);
   }
 });
+
+//number of weapons with dps gt 100
+app.get("/powerfulWeapon", async (req, res) => {
+    try {
+     const powerfulWeaponCount = await db.weapons.count({
+        where: {
+          dps: { [Op.gt]: 100 },
+        },
+      });
+      console.log(powerfulWeaponCount)
+  
+      res.status(200).send({ count: powerfulWeaponCount });
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  });
 
 db.sequelize
   .sync()
