@@ -38,7 +38,6 @@ app.get("/favoritePizza", async (req, res) => {
         ],
       },
     });
-    console.log(turtles);
     res.status(200).send(turtles);
   } catch (err) {
     res.status(500).send(err);
@@ -112,19 +111,28 @@ app.get("/superFat", async (req, res) => {
 
 //number of weapons with dps gt 100
 app.get("/powerfulWeapon", async (req, res) => {
-    try {
-     const powerfulWeaponCount = await db.weapons.count({
-        where: {
-          dps: { [Op.gt]: 100 },
-        },
-      });
-      console.log(powerfulWeaponCount)
-  
-      res.status(200).send({ count: powerfulWeaponCount });
-    } catch (err) {
-      res.status(500).send(err);
-    }
-  });
+  try {
+    const powerfulWeaponCount = await db.weapons.count({
+      where: {
+        dps: { [Op.gt]: 100 },
+      },
+    });
+    res.status(200).send({ count: powerfulWeaponCount });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+//create fifths pizza via turtle
+app.post("/createPizza", async ({ body }, res) => {
+  try {
+    const turtle = await db.turtles.findByPk(5);
+    const newPizza = await turtle.createPizza(body);
+    res.status(200).send(newPizza);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
 
 db.sequelize
   .sync()

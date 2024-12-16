@@ -17,6 +17,13 @@ module.exports = (Sequelize, config) => {
   const weapons = Weapon(Sequelize, sequelize);
   const pizzas = Pizza(Sequelize, sequelize);
 
+  turtles.prototype.createPizza = async function (pizza) {
+    const newPizza = await pizzas.create(pizza);
+    this.firstFavoritePizzaId = newPizza.id;
+    await this.save();
+    return newPizza;
+  };
+
   weapons.hasOne(turtles, { foreignKey: "weaponId" });
   turtles.belongsTo(weapons, { foreignKey: "weaponId" });
   turtles.belongsTo(pizzas, {

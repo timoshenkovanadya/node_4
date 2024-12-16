@@ -8,10 +8,9 @@ const { checkIsString, checkIsNumber } = require("../utils");
 //create
 turtleRouter.post("/", async ({ body }, res) => {
   try {
-      const newTurtle = await db.turtles.create(body);
-      res.json(newTurtle);
-    } 
- catch (err) {
+    const newTurtle = await db.turtles.create(body);
+    res.json(newTurtle);
+  } catch (err) {
     res.status(500).send(err);
   }
 });
@@ -29,7 +28,6 @@ turtleRouter.get("/", async (req, res) => {
 //readOne
 turtleRouter.get("/:id", async ({ params }, res) => {
   try {
-    console.log("id", params.id);
     const turtle = await db.turtles.findOne({
       where: {
         id: params.id,
@@ -51,7 +49,8 @@ turtleRouter.put("/:id", async ({ body, params }, res) => {
       (body.name && !checkIsString(body.name)) ||
       (body.color && !checkIsString(body.color)) ||
       (body.weaponId && !checkIsNumber(body.weaponId)) ||
-      (body.firstFavoritePizzaId && !checkIsNumber(body.firstFavoritePizzaId)) ||
+      (body.firstFavoritePizzaId &&
+        !checkIsNumber(body.firstFavoritePizzaId)) ||
       (body.secondFavoritePizzaId && !checkIsNumber(body.secondFavoritePizzaId))
     ) {
       return res.status(400).send("invalid data input");
